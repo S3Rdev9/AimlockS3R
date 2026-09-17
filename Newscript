@@ -423,7 +423,7 @@ local AimPartToggle = Instance.new("TextButton", MainFrame)
 AimPartToggle.Size = UDim2.new(0.8,0,0.12,0)
 AimPartToggle.Position = UDim2.new(0.1,0,0.82,0)
 AimPartToggle.BackgroundColor3 = CurrentTheme.Panel
-AimPartToggle.Text = "Target: Head (fixed)"
+AimPartToggle.Text = "Target: Head"
 AimPartToggle.TextScaled = true
 AimPartToggle.TextColor3 = Color3.new(1,1,1)
 Instance.new("UICorner", AimPartToggle).CornerRadius = UDim.new(0,8)
@@ -462,10 +462,10 @@ local PREDICTION_TIME = 0.01
 local guiOpen = false
 
 local AIM_MODES = {
-    {name = "Head (fixed)", part = "Head"},
-    {name = "Torso (fixed)", part = "HumanoidRootPart"},
-    {name = "Right Arm (fixed)", part = "RightUpperArm"},
-    {name = "Left Arm (fixed)", part = "LeftUpperArm"},
+    {name = "Head", part = "Head"},
+    {name = "Torso", part = "HumanoidRootPart"},
+    {name = "Right Arm", part = "RightUpperArm"},
+    {name = "Left Arm", part = "LeftUpperArm"},
     {name = "Auto Switch (Head ↔ Torso)", parts = {"Head", "HumanoidRootPart"}},
     {name = "Auto Switch (Right ↔ Left Arm)", parts = {"RightUpperArm", "LeftUpperArm"}} 
 }
