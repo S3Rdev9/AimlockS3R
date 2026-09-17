@@ -458,7 +458,7 @@ local FOVCircleForcedOff = false
 local ProtectedPlayers = {}
 local PlayerButtons = {}
 local AIM_SMOOTHNESS = 0.9
-local PREDICTION_TIME = 0.04
+local PREDICTION_TIME = 0.02
 local guiOpen = false
 
 local AIM_MODES = {
