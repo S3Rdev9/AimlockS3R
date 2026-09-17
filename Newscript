@@ -1,6 +1,8 @@
--- Anouar777x Script - Fully Decrypted & Unlocked
--- Custom Black/Red/Green Theme Integrated
+-- [[ S3R Dev | Combined Ultimate Script ]] --
+-- UI Engine: S3R Dark Framework
+-- Developer: S3R Dev
 
+local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterPack = game:GetService("StarterPack")
@@ -9,13 +11,145 @@ local UserInputService = game:GetService("UserInputService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
--- ================= CONFIGURATION =================
+-- Cleanup previous S3R scripts
+if CoreGui:FindFirstChild("S3R_HideName_GUI") then
+    CoreGui.S3R_HideName_GUI:Destroy()
+end
+if CoreGui:FindFirstChild("S3R_HUB") then
+    CoreGui.S3R_HUB:Destroy()
+end
+
+-- ========================================================
+-- [ COMBINED UI & SCREEN GUI ]
+-- ========================================================
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "S3R_HUB"
+ScreenGui.IgnoreGuiInset = true 
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = CoreGui
+
+-- ========================================================
+-- [ PART 1: NAME HIDE SYSTEM ]
+-- ========================================================
+local HideNameActive = true
+
+local MainHideFrame = Instance.new("Frame", ScreenGui)
+MainHideFrame.Name = "S3R_MainFrame"
+MainHideFrame.Size = UDim2.new(0, 300, 0, 160)
+MainHideFrame.Position = UDim2.new(0.5, -150, 0.4, -80)
+MainHideFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 15)
+MainHideFrame.BorderSizePixel = 0
+MainHideFrame.Active = true
+MainHideFrame.Draggable = true
+MainHideFrame.Visible = false
+
+Instance.new("UICorner", MainHideFrame).CornerRadius = UDim.new(0, 12)
+local MainStroke = Instance.new("UIStroke", MainHideFrame)
+MainStroke.Color = Color3.fromRGB(45, 45, 58)
+MainStroke.Thickness = 1.5
+
+-- Top Header Bar (Name Hide)
+local TopBar = Instance.new("Frame", MainHideFrame)
+TopBar.Size = UDim2.new(1, 0, 0, 38)
+TopBar.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+TopBar.BorderSizePixel = 0
+Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 12)
+
+local TitleText = Instance.new("TextLabel", TopBar)
+TitleText.Size = UDim2.new(1, -15, 1, 0)
+TitleText.Position = UDim2.new(0, 15, 0, 0)
+TitleText.Text = "S3R  |  Hide Name Only"
+TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleText.Font = Enum.Font.GothamBold
+TitleText.TextSize = 13
+TitleText.TextXAlignment = Enum.TextXAlignment.Left
+TitleText.BackgroundTransparency = 1
+
+local DevTag = Instance.new("TextLabel", TopBar)
+DevTag.Size = UDim2.new(0, 80, 1, 0)
+DevTag.Position = UDim2.new(1, -90, 0, 0)
+DevTag.Text = "S3R Dev"
+DevTag.TextColor3 = Color3.fromRGB(100, 100, 130)
+DevTag.Font = Enum.Font.GothamMedium
+DevTag.TextSize = 10
+DevTag.TextXAlignment = Enum.TextXAlignment.Right
+DevTag.BackgroundTransparency = 1
+
+-- Container & Toggle Button (Name Hide)
+local Container = Instance.new("Frame", MainHideFrame)
+Container.Size = UDim2.new(1, -24, 0, 42)
+Container.Position = UDim2.new(0, 12, 0, 55)
+Container.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 8)
+
+local Label = Instance.new("TextLabel", Container)
+Label.Size = UDim2.new(0.6, 0, 1, 0)
+Label.Position = UDim2.new(0, 12, 0, 0)
+Label.Text = "Complete Name Hide"
+Label.TextColor3 = Color3.fromRGB(220, 220, 220)
+Label.Font = Enum.Font.GothamMedium
+Label.TextSize = 11
+Label.TextXAlignment = Enum.TextXAlignment.Left
+Label.BackgroundTransparency = 1
+
+local ToggleBtn = Instance.new("TextButton", Container)
+ToggleBtn.Size = UDim2.new(0, 52, 0, 24)
+ToggleBtn.Position = UDim2.new(1, -62, 0.5, -12)
+ToggleBtn.Text = "ON"
+ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 160, 80)
+ToggleBtn.Font = Enum.Font.GothamBold
+ToggleBtn.TextSize = 10
+Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(0, 5)
+
+ToggleBtn.MouseButton1Click:Connect(function()
+    HideNameActive = not HideNameActive
+    ToggleBtn.Text = HideNameActive and "ON" or "OFF"
+    ToggleBtn.BackgroundColor3 = HideNameActive and Color3.fromRGB(40, 160, 80) or Color3.fromRGB(50, 50, 60)
+
+    local char = LocalPlayer.Character
+    if char and not HideNameActive then
+        for _, desc in ipairs(char:GetDescendants()) do
+            if desc:IsA("BillboardGui") then
+                desc.Enabled = true
+            elseif desc:IsA("TextLabel") then
+                desc.TextTransparency = 0
+            end
+        end
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    local char = LocalPlayer.Character
+    if char then
+        if HideNameActive then
+            if char:FindFirstChild("Humanoid") then
+                char.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+            end
+            for _, desc in ipairs(char:GetDescendants()) do
+                if desc:IsA("BillboardGui") then
+                    desc.Enabled = false
+                elseif desc:IsA("TextLabel") and (desc.Text:find(LocalPlayer.Name) or desc.Text:find(LocalPlayer.DisplayName)) then
+                    desc.TextTransparency = 1
+                end
+            end
+        else
+            if char:FindFirstChild("Humanoid") then
+                char.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.Viewer
+            end
+        end
+    end
+end)
+
+
+-- ========================================================
+-- [ PART 2: AIMBOT & ESP HUB ]
+-- ========================================================
 local espInventoryEnabled = false 
 local MAX_DISTANCE = 2000 
 local UPDATE_INTERVAL = 1 
 local BillboardCache = {}
 local nameCache = {} 
-
 local HEAD_FORWARD_OFFSET = 1.10
 
 local RARITY_COLORS = {
@@ -29,7 +163,6 @@ local RARITY_COLORS = {
 
 local function getRealName(t)
     if not t or not t.Name then return nil end
-    
     local originalName = t.Name
     local lowerName = originalName:lower()
 
@@ -42,20 +175,13 @@ local function getRealName(t)
         :match("^%s*(.-)%s*$")
 
     if cleaned:find("fishing") or cleaned:find("rod") or cleaned:find("canne") or cleaned:find("pêche") then
-        if cleaned:find("ultimate") or cleaned:find("ult") then
-            return "Ultimate Fishing Rod"
-        elseif cleaned:find("advanced") then
-            return "Advanced Fishing Rod"
-        elseif cleaned:find("pro") then
-            return "Pro Fishing Rod"
-        else
-            return "Regular Fishing Rod"
-        end
+        if cleaned:find("ultimate") or cleaned:find("ult") then return "Ultimate Fishing Rod"
+        elseif cleaned:find("advanced") then return "Advanced Fishing Rod"
+        elseif cleaned:find("pro") then return "Pro Fishing Rod"
+        else return "Regular Fishing Rod" end
     end
 
-    if nameCache[originalName] then 
-        return nameCache[originalName] 
-    end
+    if nameCache[originalName] then return nameCache[originalName] end
     
     local h = t:FindFirstChild("Handle")
     local fallbackName = cleaned
@@ -67,23 +193,16 @@ local function getRealName(t)
                     local match = true
                     if h then
                         for _, c in ipairs(h:GetChildren()) do
-                            if not item.Handle:FindFirstChild(c.Name) then 
-                                match = false 
-                                break 
-                            end
+                            if not item.Handle:FindFirstChild(c.Name) then match = false; break end
                         end
                     else
                         match = false
                     end
-                    if match then 
-                        nameCache[originalName] = item.Name 
-                        return item.Name 
-                    end
+                    if match then nameCache[originalName] = item.Name; return item.Name end
                 end
             end
         end
     end
-    
     nameCache[originalName] = fallbackName
     return fallbackName
 end
@@ -91,20 +210,13 @@ end
 local function updateESP(p)
     local bb = BillboardCache[p]
     if not bb then return end
-    
     local char = p.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then 
-        bb.Enabled = false
-        return 
-    end
+    if not char or not char:FindFirstChild("HumanoidRootPart") then bb.Enabled = false; return end
     
     local lChar = LocalPlayer.Character
     if lChar and lChar:FindFirstChild("HumanoidRootPart") then
         local dist = (lChar.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude
-        if dist > MAX_DISTANCE then
-            bb.Enabled = false
-            return
-        end
+        if dist > MAX_DISTANCE then bb.Enabled = false; return end
     end
 
     local container = bb:FindFirstChild("EspContainer")
@@ -130,32 +242,28 @@ local function updateESP(p)
 
     bb.Enabled = espInventoryEnabled and (#tools > 0)
     
-   for _, tool in ipairs(tools) do
-    local name = getRealName(tool)
-
-    if name then
-        local lbl = Instance.new("TextLabel", container)
-        lbl.Size = UDim2.new(0, 180, 0, 14)
-        lbl.BackgroundTransparency = 1
-        lbl.Text = name
-        lbl.Font = Enum.Font.GothamBold
-        lbl.TextSize = 13
-        lbl.TextStrokeTransparency = 0.5
-        local rarity = tool:GetAttribute("RarityName") or tool:GetAttribute("Rarity")
-        lbl.TextColor3 = RARITY_COLORS[rarity] or Color3.fromRGB(255,255,255)
-        lbl.TextXAlignment = Enum.TextXAlignment.Center
+    for _, tool in ipairs(tools) do
+        local name = getRealName(tool)
+        if name then
+            local lbl = Instance.new("TextLabel", container)
+            lbl.Size = UDim2.new(0, 180, 0, 14)
+            lbl.BackgroundTransparency = 1
+            lbl.Text = name
+            lbl.Font = Enum.Font.GothamBold
+            lbl.TextSize = 13
+            lbl.TextStrokeTransparency = 0.5
+            local rarity = tool:GetAttribute("RarityName") or tool:GetAttribute("Rarity")
+            lbl.TextColor3 = RARITY_COLORS[rarity] or Color3.fromRGB(255,255,255)
+            lbl.TextXAlignment = Enum.TextXAlignment.Center
+        end
     end
-end
-
 end
 
 local function createESP(p)
     if p == LocalPlayer then return end
-    
     local function setup(char)
         local root = char:WaitForChild("HumanoidRootPart", 15)
         if not root then return end
-        
         if BillboardCache[p] then BillboardCache[p]:Destroy() end
     
         local bb = Instance.new("BillboardGui", root)
@@ -171,15 +279,10 @@ local function createESP(p)
         cont.BackgroundTransparency = 1
         
         BillboardCache[p] = bb
-
         updateESP(p)
         
-        char.ChildAdded:Connect(function(child)
-            if child:IsA("Tool") then task.wait(0.1); updateESP(p) end
-        end)
-        char.ChildRemoved:Connect(function(child)
-            if child:IsA("Tool") then task.wait(0.1); updateESP(p) end
-        end)
+        char.ChildAdded:Connect(function(child) if child:IsA("Tool") then task.wait(0.1); updateESP(p) end end)
+        char.ChildRemoved:Connect(function(child) if child:IsA("Tool") then task.wait(0.1); updateESP(p) end end)
         
         local backpack = p:WaitForChild("Backpack", 5)
         if backpack then
@@ -194,7 +297,6 @@ local function createESP(p)
             end
         end)
     end
-    
     p.CharacterAdded:Connect(setup)
     if p.Character then setup(p.Character) end
 end
@@ -202,28 +304,18 @@ end
 for _, p in ipairs(Players:GetPlayers()) do createESP(p) end
 Players.PlayerAdded:Connect(createESP)
 
--- ================= INTERFACE =================
-local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
-ScreenGui.Name = "S3R_HUB"
-ScreenGui.IgnoreGuiInset = true 
-ScreenGui.ResetOnSpawn = false
-
--- إعدادات الألوان
-local Themes = {
-    Custom = {
-        Background = Color3.fromRGB(15, 15, 15),
-        Panel = Color3.fromRGB(35, 35, 35),
-        Accent = Color3.fromRGB(0, 255, 120),
-        Text = Color3.fromRGB(255, 255, 255),
-        ON = Color3.fromRGB(0, 200, 80),
-        OFF = Color3.fromRGB(200, 40, 40)
-    }
+-- Themes & UI Setup
+local CurrentTheme = {
+    Background = Color3.fromRGB(15, 15, 15),
+    Panel = Color3.fromRGB(35, 35, 35),
+    Accent = Color3.fromRGB(0, 255, 120),
+    Text = Color3.fromRGB(255, 255, 255),
+    ON = Color3.fromRGB(0, 200, 80),
+    OFF = Color3.fromRGB(200, 40, 40)
 }
 
-local CurrentTheme = Themes.Custom
-
--- ================= CUSTOM UI FOV CIRCLE =================
-local FOVCircleFrame = Instance.new("Frame")
+-- FOV Circle
+local FOVCircleFrame = Instance.new("Frame", ScreenGui)
 FOVCircleFrame.Name = "CustomFOVCircle"
 FOVCircleFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 FOVCircleFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -232,19 +324,15 @@ FOVCircleFrame.BackgroundTransparency = 1
 FOVCircleFrame.BorderSizePixel = 0
 FOVCircleFrame.ZIndex = 1
 FOVCircleFrame.Visible = true
-FOVCircleFrame.Parent = ScreenGui
 
-local circleCorner = Instance.new("UICorner")
+local circleCorner = Instance.new("UICorner", FOVCircleFrame)
 circleCorner.CornerRadius = UDim.new(1, 0)
-circleCorner.Parent = FOVCircleFrame
-
-local circleStroke = Instance.new("UIStroke")
+local circleStroke = Instance.new("UIStroke", FOVCircleFrame)
 circleStroke.Color = Color3.fromRGB(255, 0, 0)
 circleStroke.Thickness = 2
 circleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-circleStroke.Parent = FOVCircleFrame
 
--- ================= MAIN HUB FRAMES =================
+-- Main Hub Frame
 local MainFrame = Instance.new("Frame", ScreenGui)
 MainFrame.Size = UDim2.new(0.4, 0, 0.65, 0)
 MainFrame.Position = UDim2.new(0.3, 0, 0.18, 0)
@@ -258,7 +346,6 @@ TitleLabel.Size = UDim2.new(1, 0, 0.08, 0)
 TitleLabel.Position = UDim2.new(0, 0, 0.02, 0)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.RichText = true
-TitleLabel.TextScaled = false
 TitleLabel.TextSize = 20
 TitleLabel.Text = "! 👑 O!n!l!y S!H!A!F!I 👑 !"
 TitleLabel.TextColor3 = CurrentTheme.Accent
@@ -268,7 +355,7 @@ local MainDrag = Instance.new("Frame", MainFrame)
 MainDrag.Size = UDim2.new(1,0,0.1,0)
 MainDrag.BackgroundTransparency = 1
 
--- ================= TOGGLE BUTTON (Modified) =================
+-- Open/Close Button
 local ToggleButton = Instance.new("TextButton", ScreenGui)
 ToggleButton.Size = UDim2.new(0, 110, 0, 45)
 ToggleButton.Position = UDim2.new(0.88, 0, 0.05, 0)
@@ -279,9 +366,7 @@ ToggleButton.TextScaled = true
 ToggleButton.Font = Enum.Font.GothamBold
 ToggleButton.Visible = true
 
-local ToggleCorner = Instance.new("UICorner", ToggleButton)
-ToggleCorner.CornerRadius = UDim.new(1, 0)
-
+Instance.new("UICorner", ToggleButton).CornerRadius = UDim.new(1, 0)
 local ToggleStroke = Instance.new("UIStroke", ToggleButton)
 ToggleStroke.Color = Color3.fromRGB(0, 255, 120)
 ToggleStroke.Thickness = 2
@@ -290,8 +375,8 @@ ToggleStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 local ToggleDrag = Instance.new("Frame", ToggleButton)
 ToggleDrag.Size = UDim2.new(1,0,1,0)
 ToggleDrag.BackgroundTransparency = 1
--- ============================================================
 
+-- Hub Controls
 local ESPInventoryToggle = Instance.new("TextButton", MainFrame)
 ESPInventoryToggle.Size = UDim2.new(0.8,0,0.12,0)
 ESPInventoryToggle.Position = UDim2.new(0.1,0,0.12,0)
@@ -363,12 +448,7 @@ Instance.new("UICorner", PlayerListFrame).CornerRadius = UDim.new(0,8)
 local PlayerListLayout = Instance.new("UIListLayout", PlayerListFrame)
 PlayerListLayout.Padding = UDim.new(0,4)
 
-local function ApplyTheme()
-    MainFrame.BackgroundColor3 = CurrentTheme.Background
-    TitleLabel.TextColor3 = CurrentTheme.Accent
-end
-
--- ================= VARIABLES =================
+-- Variables & Logic
 local espEnabledStatus = false
 local AimbotOn = false
 local FOVRadius = 100
@@ -382,10 +462,10 @@ local PREDICTION_TIME = 0.04
 local guiOpen = false
 
 local AIM_MODES = {
-    {name = "Head (fixed)",               part = "Head"},
-    {name = "Torso (fixed)",              part = "HumanoidRootPart"},
-    {name = "Right Arm (fixed)",          part = "RightUpperArm"},
-    {name = "Left Arm (fixed)",          part = "LeftUpperArm"},
+    {name = "Head (fixed)", part = "Head"},
+    {name = "Torso (fixed)", part = "HumanoidRootPart"},
+    {name = "Right Arm (fixed)", part = "RightUpperArm"},
+    {name = "Left Arm (fixed)", part = "LeftUpperArm"},
     {name = "Auto Switch (Head ↔ Torso)", parts = {"Head", "HumanoidRootPart"}},
     {name = "Auto Switch (Right ↔ Left Arm)", parts = {"RightUpperArm", "LeftUpperArm"}} 
 }
@@ -395,7 +475,6 @@ local currentAutoIndex = 1
 local lastSwitchTime = 0
 local SWITCH_INTERVAL = 0.7
 
--- ================= FUNCTIONS =================
 local function IsAlive(char)
     local h = char and char:FindFirstChildOfClass("Humanoid")
     return h and h.Health > 0
@@ -405,23 +484,15 @@ local function IsVisible(part)
     if not part then return false end
     local origin = Camera.CFrame.Position
     local direction = (part.Position - origin)
-    
     local blacklist = {LocalPlayer.Character or workspace, part.Parent}
     
     local targetHum = part.Parent:FindFirstChildOfClass("Humanoid")
     if targetHum and targetHum.SeatPart then
         local vehicle = targetHum.SeatPart:FindFirstAncestorOfClass("Model")
-        if vehicle then
-            table.insert(blacklist, vehicle)
-        end
+        if vehicle then table.insert(blacklist, vehicle) end
     end
-    
-    if workspace:FindFirstChild("Vehicles") then
-        table.insert(blacklist, workspace.Vehicles)
-    end
-    if workspace:FindFirstChild("Cars") then
-        table.insert(blacklist, workspace.Cars)
-    end
+    if workspace:FindFirstChild("Vehicles") then table.insert(blacklist, workspace.Vehicles) end
+    if workspace:FindFirstChild("Cars") then table.insert(blacklist, workspace.Cars) end
 
     local params = RaycastParams.new()
     params.FilterType = Enum.RaycastFilterType.Blacklist
@@ -434,12 +505,8 @@ end
 local function removeESP(char)
     if char then
         local head = char:FindFirstChild("Head")
-        if head then 
-            local b = head:FindFirstChild("AnouarNameHP") 
-            if b then b:Destroy() end 
-        end
-        local h = char:FindFirstChild("AnouarHighlight") 
-        if h then h:Destroy() end
+        if head then local b = head:FindFirstChild("AnouarNameHP"); if b then b:Destroy() end end
+        local h = char:FindFirstChild("AnouarHighlight"); if h then h:Destroy() end
     end
 end
 
@@ -507,41 +574,6 @@ local function applyESP(char)
     hl.FillTransparency = 1
 end
 
-local function onCharAdded(char)
-    local plr = Players:GetPlayerFromCharacter(char)
-    if not plr or plr == LocalPlayer then return end
-    task.delay(0.6, function()
-        removeESP(char)
-        if espEnabledStatus then applyESP(char) end
-    end)
-end
-
-for _, p in Players:GetPlayers() do
-    if p ~= LocalPlayer then
-        p.CharacterAdded:Connect(onCharAdded)
-        if p.Character then onCharAdded(p.Character) end
-    end
-end
-Players.PlayerAdded:Connect(function(p)
-    if p ~= LocalPlayer then
-        p.CharacterAdded:Connect(onCharAdded)
-        if p.Character then onCharAdded(p.Character) end
-    end
-end)
-
-RunService.Heartbeat:Connect(function()
-    if espEnabledStatus then
-        for _, p in Players:GetPlayers() do
-            if p ~= LocalPlayer and p.Character then
-                local head = p.Character:FindFirstChild("Head")
-                if head and not head:FindFirstChild("AnouarNameHP") then
-                    applyESP(p.Character)
-                end
-            end
-        end
-    end
-end)
-
 local function UpdateProtectedList()
     for _, b in PlayerButtons do b:Destroy() end
     PlayerButtons = {}
@@ -574,16 +606,11 @@ UpdateProtectedList()
 
 local function GetTargetPart(char)
     local mode = AIM_MODES[currentModeIndex]
-    local partName
-    if mode.parts then
-        partName = mode.parts[currentAutoIndex]
-    else
-        partName = mode.part
-    end
+    local partName = mode.parts and mode.parts[currentAutoIndex] or mode.part
     local part = char:FindFirstChild(partName)
     if not part then
         if partName == "RightUpperArm" then part = char:FindFirstChild("Right Arm") end
-        if partName == "LeftUpperArm"   then part = char:FindFirstChild("Left Arm") end
+        if partName == "LeftUpperArm" then part = char:FindFirstChild("Left Arm") end
     end
     return part or char:FindFirstChild("Head") or char:FindFirstChild("HumanoidRootPart")
 end
@@ -592,12 +619,9 @@ local function GetPredictedPosition(char)
     local part = GetTargetPart(char)
     if not part then return nil end
     local root = char:FindFirstChild("HumanoidRootPart")
-    
     local pos = part.Position
     local velocity = root and root.Velocity or Vector3.zero
-    
     local moveOffset = (velocity.Magnitude > 0.1) and (velocity.Unit * HEAD_FORWARD_OFFSET) or (part.CFrame.LookVector * HEAD_FORWARD_OFFSET)
-    
     return pos + (velocity * PREDICTION_TIME) + moveOffset
 end
 
@@ -642,29 +666,14 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-RunService.Heartbeat:Connect(function(dt)
-    if not AimbotOn then return end
-    local mode = AIM_MODES[currentModeIndex]
-    if not mode.parts then return end
-    lastSwitchTime = lastSwitchTime + dt
-    if lastSwitchTime >= SWITCH_INTERVAL then
-        lastSwitchTime = 0
-        currentAutoIndex = currentAutoIndex % #mode.parts + 1
-    end
-end)
-
--- ================= BUTTONS =================
+-- Button Connects
 ESPToggle.MouseButton1Click:Connect(function()
     espEnabledStatus = not espEnabledStatus
     ESPToggle.Text = "ESP: " .. (espEnabledStatus and "ON" or "OFF")
     ESPToggle.BackgroundColor3 = espEnabledStatus and CurrentTheme.ON or CurrentTheme.OFF
     for _, p in Players:GetPlayers() do
         if p ~= LocalPlayer and p.Character then
-            if espEnabledStatus then 
-                applyESP(p.Character) 
-            else 
-                removeESP(p.Character) 
-            end
+            if espEnabledStatus then applyESP(p.Character) else removeESP(p.Character) end
         end
     end
 end)
@@ -709,12 +718,10 @@ ESPInventoryToggle.MouseButton1Click:Connect(function()
     espInventoryEnabled = not espInventoryEnabled
     ESPInventoryToggle.Text = "ESP Inventory: " .. (espInventoryEnabled and "ON" or "OFF")
     ESPInventoryToggle.BackgroundColor3 = espInventoryEnabled and CurrentTheme.ON or CurrentTheme.OFF
-    for _, p in ipairs(Players:GetPlayers()) do
-        updateESP(p)
-    end
+    for _, p in ipairs(Players:GetPlayers()) do updateESP(p) end
 end)
 
--- ================= DRAG FUNCTIONS =================
+-- Dragging Function
 local function makeDraggable(frame, dragArea)
     local dragging, startPos, startMouse
     dragArea.InputBegan:Connect(function(input)
@@ -727,53 +734,36 @@ local function makeDraggable(frame, dragArea)
     dragArea.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = input.Position - startMouse
-            frame.Position = UDim2.new(
-                startPos.X.Scale, startPos.X.Offset + delta.X,
-                startPos.Y.Scale, startPos.Y.Offset + delta.Y
-            )
+            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = false
-        end
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
     end)
 end
 
 makeDraggable(MainFrame, MainDrag)
+makeDraggable(MainHideFrame, TopBar)
 makeDraggable(ToggleButton, ToggleDrag)
 
+-- Master Open/Close Switch (Opens both Main Hub & Name Hide Menu together)
 ToggleButton.MouseButton1Click:Connect(function()
     guiOpen = not guiOpen
     MainFrame.Visible = guiOpen
+    MainHideFrame.Visible = guiOpen
     ToggleButton.Text = guiOpen and "Close" or "Open"
     if guiOpen then UpdateProtectedList() end
 end)
 
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
-    
     if input.KeyCode == Enum.KeyCode.G then
         guiOpen = not guiOpen
         MainFrame.Visible = guiOpen
+        MainHideFrame.Visible = guiOpen
         ToggleButton.Visible = not guiOpen
         if guiOpen then UpdateProtectedList() end
     end
-    
-    if input.KeyCode == Enum.KeyCode.K then
-        FOVCircleForcedOff = not FOVCircleForcedOff
-        
-        if FOVCircleToggle then
-            if FOVCircleForcedOff then
-                FOVCircleToggle.BackgroundColor3 = Color3.fromRGB(100,100,100)
-                FOVCircleToggle.Text = "FOV Circle: FORCED OFF (K)"
-            else
-                FOVCircleToggle.BackgroundColor3 = FOVCircleVisible and CurrentTheme.ON or CurrentTheme.OFF
-                FOVCircleToggle.Text = "FOV Circle: " .. (FOVCircleVisible and "ON" or "OFF")
-            end
-        end
-    end
 end)
 
-print("Only Shafi Script Loaded Successfully!")
-ApplyTheme()
+print("S3R Combined Script Loaded Successfully!")
